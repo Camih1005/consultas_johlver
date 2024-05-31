@@ -590,7 +590,8 @@ INSERT INTO cliente (id, nombre, apellido1, apellido2, limiteCredito, idEmpleado
 (19, 'Rebeca', 'Ortega', 'Nieves', 60000.00, 18),
 (20, 'Ignacio', 'Flores', 'Castaño', 45000.00, 19),
 (21, 'Clara', 'Martínez', 'Lara', 48000.00, 20),
-(22, 'Camilo', 'Hernandez', 'torres', 480000.00, 19);
+(22, 'Camilo', 'Hernandez', 'torres', 480000.00, 19),
+(23,'Mary','Mendoza','Rivero',480000.00, 2);
 
 
 INSERT INTO cliente_direccion (id, direccion, tipoDireccion, idCliente, idCiudad) VALUES  
@@ -660,15 +661,17 @@ INSERT INTO pedido (id,fechaPedido, fechaEsperada, fechaEntrega, comentario, idC
 (3,'2023-03-01', '2023-03-10', '2023-03-09', 'Entrega satisfactoria', 3, 5),
 (4,'2023-04-01', '2023-04-10', '2023-04-09', 'Entrega rápida y eficiente', 4, 5),
 (5,'2023-05-01', '2023-05-10', '2023-05-09', 'Retenido en aduanas', 1, 6),
-(6,'2023-06-01', '2023-06-10', '2023-06-09', 'No enviado', 2, 7),
-(7,'2023-07-01', '2023-07-10', '2023-07-09', 'Procesando', 3, 2),
-(8,'2023-08-01', '2023-08-10', '2023-08-09', 'En camino', 4, 3),
+(6,'2023-06-01', '2023-06-10', '2023-06-09', 'No enviado', 7, 7),
+(7,'2023-07-01', '2023-07-10', '2023-07-09', 'Procesando', 9, 2),
+(8,'2023-08-01', '2023-08-10', '2023-08-09', 'En camino', 21, 3),
 (9,'2023-09-01', '2023-09-10', '2023-09-09', 'Entregado parcialmente', 1, 4),
 (10,'2023-10-01', '2023-10-10', '2023-10-09', 'Cancelado', 2, 1),
 (11,'2023-10-01', '2023-10-10', '2023-11-09', 'Entregado', 2, 3),
-(12,'2023-10-01', '2023-10-10', '2023-10-09', 'Entregado', 1, 2),
-(13,'2023-11-01', '2023-11-20', '2023-11-09', 'Entregado', 3, 1),
-(14,'2009-11-01', '2009-11-20', null , 'cancelado', 2, 5);
+(12,'2023-10-01', '2023-10-10', '2023-10-09', 'Entregado', 20, 2),
+(13,'2023-11-01', '2023-11-20', '2023-11-09', 'Entregado', 13, 1),
+(14,'2009-11-01', '2009-11-20', null , 'cancelado', 2, 5),
+(15,'2018-11-01', '2018-11-08', '2018-11-12' , 'Entregado', 4, 3);
+
 
 -- Insert data into detalle_pedido table
 INSERT INTO detalle_pedido (idPedido, idProducto, cantidad, idLineaProducto) VALUES 
@@ -688,14 +691,14 @@ INSERT INTO detalle_pedido (idPedido, idProducto, cantidad, idLineaProducto) VAL
 INSERT INTO pago (fecha, total, idTipo, idCliente) VALUES 
 ('2000-05-15', 25000.00, 1, 1), 
 ('2001-07-20', 38000.00, 2, 2),
-('2002-09-10', 42000.00, 3, 3), 
-('2003-11-05', 55000.00, 4, 4),
-('2004-12-30', 48000.00, 1, 1), 
-('2005-02-18', 29000.00, 2, 2),
-('2006-03-22', 36000.00, 3, 3), 
-('2007-04-14', 61000.00, 4, 4),
-('2008-06-08', 27000.00, 1, 1), 
-('2009-08-12', 40000.00, 2, 2),
+('2002-09-10', 42000.00, 3, 11), 
+('2003-11-05', 55000.00, 4, 14),
+('2004-12-30', 48000.00, 1, 13), 
+('2005-02-18', 29000.00, 2, 6),
+('2006-03-22', 36000.00, 3, 4), 
+('2007-04-14', 61000.00, 4, 1),
+('2008-06-08', 27000.00, 1, 12), 
+('2009-08-12', 40000.00, 2, 17),
 ('2008-08-12', 70000.00, 5, 4);
 
 
@@ -707,3 +710,4 @@ create view paisvista as select p.id as idPais,p.nombre as pais,
 c.id as idCiudad,c.nombre as ciudad,r.id as idRegion,r.nombre as Region from pais as p join region as r
 on p.id = r.idPais join ciudad as c on r.id = c.idRegion ;
 -- FIN
+drop database garden1;
