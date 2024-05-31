@@ -520,7 +520,8 @@ INSERT INTO empleado (id, nombre, apellido1, apellido2, extension, email, idOfic
 (18, 'Isabel', 'Mendoza', 'Castillo', '118', 'isabel.mendoza@example.com', 'OF7', 11, 1),
 (19, 'Javier', 'Jiménez', 'Rojas', '119', 'javier.jimenez@example.com', 'OF8', 12, 3),
 (20, 'Karla', 'Ruiz', 'Torres', '120', 'karla.ruiz@example.com', 'OF9', 13, 4),
-(21, 'Laura', 'Hidalgo', 'Sosa', '121', 'laura.hidalgo@example.com', 'OF10', 14, 2);
+(21, 'Laura', 'Hidalgo', 'Sosa', '121', 'laura.hidalgo@example.com', 'OF10', 14, 2),
+(22, 'Christian', 'Celis', 'Ardila', '122', 'darkhouse@example.com', null, 14, 2);
 
 
 
