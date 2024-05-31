@@ -314,11 +314,97 @@ right join cliente as cl on cl.id = pd.idCliente where pd.id is null;
 3. Devuelve un listado que muestre los clientes que no han realizado ningún
 pago y los que no han realizado ningún pedido.
 */
-select cl.nombre as clienteSinPedido,pg.total,cl2.nombre as cliSinPago,pd.id
+select cl.nombre as clienteSinPedido,cl2.nombre as cliSinPago
 from cliente as cl 
 join cliente as cl2 on cl.id = cl2.id
 left join pago as pg on pg.idCliente = cl2.id 
 left join pedido as pd on pd.idCliente = cl.id where pg.total is null and pd.id is null; 
+
+
+/*
+4. Devuelve un listado que muestre solamente los empleados que no tienen
+una oficina asociada.
+*/
+
+Select nombre,concat(apellido1," ",apellido2) as apellidos from empleado where idOficina is null;
+
+/*
+5. Devuelve un listado que muestre solamente los empleados que no tienen un
+cliente asociado.
+*/
+
+select em.nombre from empleado as em 
+left join cliente as cl on em.id = cl.idEmpleado
+where cl.id is null;
+
+/*
+6. Devuelve un listado que muestre solamente los empleados que no tienen un
+cliente asociado junto con los datos de la oficina donde trabajan.
+*/
+
+select em.nombre from empleado as em 
+left join cliente as cl on em.id = cl.idEmpleado 
+join oficina_direccion as od 
+on od.idOficina = em.idOficina where cl.id is null;
+
+/*
+7. Devuelve un listado que muestre los empleados que no tienen una oficina
+asociada y los que no tienen un cliente asociado.
+*/
+
+select em.nombre,ofi.id,cl.id from empleado as em 
+left join oficina as ofi on ofi.id = em.idOficina
+left join empleado as em2 on em2.idOficina = ofi.id
+left join cliente as cl on cl.idEmpleado = em2.id 
+where  cl.id is null or em2.idOficina is null;
+
+/*
+8. Devuelve un listado de los productos que nunca han aparecido en un
+pedido.
+*/
+
+select p.id,p.descripcion as producto from producto as p 
+left join detalle_pedido as dp on dp.idProducto = p.id
+where dp.idProducto is null; 
+
+
+/*
+9. Devuelve un listado de los productos que nunca han aparecido en un
+pedido. El resultado debe mostrar el nombre, la descripción y la imagen del
+producto.
+*/
+
+select p.id,p.nombre as nombre,p.descripcion,gp.imagen from producto as p 
+left join detalle_pedido as dp on dp.idProducto = p.id
+join gama_producto as gp on p.idGama = gp.id
+where dp.idProducto is null; 
+
+/*
+10. Devuelve las oficinas donde no trabajan ninguno de los empleados que
+hayan sido los representantes de ventas de algún cliente que haya realizado
+la compra de algún producto de la gama Frutales.
+*/
+
+select * from oficina where id not in(
+select ofi.id from oficina as ofi 
+join empleado as em on em.idOficina = ofi.id
+join cargo as cg on cg.id = em.idCargo
+join cliente as cl on cl.idEmpleado = em.id
+join pedido as p on p.idCliente = cl.id
+join detalle_pedido as dp on dp.idPedido = p.id
+join producto as prod on prod.id = dp.idProducto
+join gama_producto as gp on prod.idGama = gp.id
+where cg.nombre = "vendedor" and gp.descripcion = "Frutas");
+
+/*
+11. Devuelve un listado con los clientes que han realizado algún pedido pero no
+han realizado ningún pago.
+*/
+select  cl2.nombre as cliSinPago
+from cliente as cl 
+join cliente as cl2 on cl.id = cl2.id
+left join pago as pg on pg.idCliente = cl2.id 
+left join pedido as pd on pd.idCliente = cl.id where pg.total is null; 
 
 
 
