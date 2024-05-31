@@ -161,11 +161,114 @@ CONSULTAS MULTITABLASS
 representante de ventas.
 */
 
+select cl.nombre as cliente,em.nombre as representanteVentas,
+concat(em.apellido1," ",em.apellido2)as apellidosRepresenVent 
+from cliente as cl 
+join empleado as em on cl.idEmpleado = em.id join cargo as cg on cg.id = em.idCargo
+where cg.nombre = "vendedor";
+
+/*
+2. Muestra el nombre de los clientes que hayan realizado pagos junto con el
+nombre de sus representantes de ventas.
+*/
+
+select cl.nombre as cliente,em.nombre as representante,pg.total,pg.fecha from cliente as cl 
+join empleado as em on em.id = cl.idEmpleado 
+join pago as pg on pg.idCliente = cl.id
+join cargo as cg on cg.id = em.idCargo where cg.nombre = "vendedor" ; 
+
+/*
+3. Muestra el nombre de los clientes que no hayan realizado pagos junto con
+el nombre de sus representantes de ventas.
+*/
+
+select cl.nombre as cliente,em.nombre as representante,pg.total,pg.fecha from cliente as cl 
+ join empleado as em on em.id = cl.idEmpleado 
+left join pago as pg on pg.idCliente = cl.id
+left join cargo as cg on cg.id = em.idCargo where cg.nombre = "vendedor" and total is null ; 
 
 
-select * from empleado;
+/*
+4. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus
+representantes junto con la ciudad de la oficina a la que pertenece el
+representante.
+*/
+
+select distinct cl.id,cl.nombre as cliente,em.nombre as representante,ofi.nombre,pv.ciudad from cliente as cl 
+join empleado as em on em.id = cl.idEmpleado 
+join pago as pg on pg.idCliente = cl.id
+join cargo as cg on cg.id = em.idCargo 
+join cliente_direccion as cd on cd.idCliente = cl.id 
+join paisvista as pv on pv.idCiudad = cd.idCiudad
+join oficina as ofi on em.idOficina = ofi.id
+where cg.nombre = "vendedor" ; 
+/*
+5. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre
+de sus representantes junto con la ciudad de la oficina a la que pertenece el
+representante.
+*/
+select distinct cl.id,cl.nombre as cliente,em.nombre as representante,ofi.nombre,pv.ciudad from cliente as cl 
+join empleado as em on em.id = cl.idEmpleado 
+left join pago as pg on pg.idCliente = cl.id
+left join cargo as cg on cg.id = em.idCargo 
+join cliente_direccion as cd on cd.idCliente = cl.id 
+join paisvista as pv on pv.idCiudad = cd.idCiudad
+join oficina as ofi on em.idOficina = ofi.id
+where cg.nombre = "vendedor" and total is null; 
 
 
 
+/*
+6. Lista la dirección de las oficinas que tengan clientes en colombia.
+*/
+
+select distinct od.direccion,pv.pais from oficina_direccion as od 
+join oficina as ofi on ofi.id = od.idOficina 
+join paisvista as pv on pv.idCiudad = od.idCiudad
+join cliente_direccion as cd on cd.idCiudad = pv.idCiudad 
+where pv.pais = "colombia";
+
+/*
+7. Devuelve el nombre de los clientes y el nombre de sus representantes junto
+con la ciudad de la oficina a la que pertenece el representante.
+*/
+
+select distinct cl.nombre as cliente,em.nombre as representante,pv.ciudad from cliente as cl 
+join empleado as em on em.id = cl.idEmpleado 
+join pago as pg on pg.idCliente = cl.id
+join cargo as cg on cg.id = em.idCargo 
+join cliente_direccion as cd on cd.idCliente = cl.id 
+join paisvista as pv on pv.idCiudad = cd.idCiudad
+join oficina as ofi on em.idOficina = ofi.id
+where cg.nombre = "vendedor"; 
+
+
+/*
+8. Devuelve un listado con el nombre de los empleados junto con el nombre
+de sus jefes.
+
+*/
+
+select em.nombre,em2.idJefe,em2.nombre from empleado as em 
+join empleado as em2
+on em.idJefe = em2.id;
+
+/*
+9. Devuelve un listado que muestre el nombre de cada empleados, el nombre
+de su jefe y el nombre del jefe de sus jefe.
+*/
+
+select em.nombre as empleado,em2.idJefe,em2.nombre as jefe, em3.idJefe,em3.nombre
+as jefejefe from empleado as em 
+join empleado as em2
+on em.idJefe = em2.id
+join empleado as em3
+on em2.idJefe = em3.id;
+
+
+select * from paisvista;
+
+
+select * from oficina_direccion;
 
 select * from pago;
