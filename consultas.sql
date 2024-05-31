@@ -64,6 +64,7 @@ SELECT cl.id, cl.nombre
 FROM cliente AS cl 
 JOIN pago AS pg ON cl.id = pg.idCliente 
 WHERE DATE_FORMAT(pg.fecha, '%Y') = '2008';
+
 -- solo
 SELECT cl.id, cl.nombre 
 FROM cliente AS cl 
@@ -264,6 +265,62 @@ join empleado as em2
 on em.idJefe = em2.id
 join empleado as em3
 on em2.idJefe = em3.id;
+
+
+/*
+10. Devuelve el nombre de los clientes a los que no se les ha entregado a
+tiempo un pedido.
+*/
+
+select * from cliente as cl 
+join pedido as pd on pd.idCliente = cl.id where 
+date(pd.fechaEntrega) > date(pd.fechaEsperada);
+
+
+/*
+11. Devuelve un listado de las diferentes gamas de producto que ha comprado
+cada cliente.
+*/
+select distinct gp.descripcion as gamas from detalle_pedido as dp 
+join pedido as p on dp.idPedido = p.id 
+join producto as prod on dp.idProducto = prod.id 
+join gama_producto as gp on gp.id = prod.idGama
+join cliente as cl on cl.id = p.idCliente;
+
+
+/*
+Consultas multitabla (Composición externa)
+*/
+
+
+/*
+1. Devuelve un listado que muestre solamente los clientes que no han
+realizado ningún pago.
+*/
+select cl.nombre as cliente
+from cliente as cl 
+left join pago as pg on pg.idCliente = cl.id where total is null; 
+
+/*
+2. Devuelve un listado que muestre solamente los clientes que no han
+realizado ningún pedido.
+*/
+
+select cl.nombre from pedido as pd 
+right join cliente as cl on cl.id = pd.idCliente where pd.id is null;
+
+
+/*
+3. Devuelve un listado que muestre los clientes que no han realizado ningún
+pago y los que no han realizado ningún pedido.
+*/
+select cl.nombre as clienteSinPedido,pg.total,cl2.nombre as cliSinPago,pd.id
+from cliente as cl 
+join cliente as cl2 on cl.id = cl2.id
+left join pago as pg on pg.idCliente = cl2.id 
+left join pedido as pd on pd.idCliente = cl.id where pg.total is null and pd.id is null; 
+
+
 
 
 select * from paisvista;
