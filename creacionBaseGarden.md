@@ -180,7 +180,6 @@ CREATE TABLE cliente(
 -- tabla direccion_cliente
 CREATE TABLE cliente_direccion(
     id INT PRIMARY KEY ,
-    ciudad INT,
     direccion VARCHAR(100),
     tipoDireccion INT,
     idCliente INT(11),
@@ -700,7 +699,8 @@ INSERT INTO pago (fecha, total, idTipo, idCliente) VALUES
 ('2007-04-14', 61000.00, 4, 1),
 ('2008-06-08', 27000.00, 1, 12), 
 ('2009-08-12', 40000.00, 2, 17),
-('2008-08-12', 70000.00, 5, 4);
+('2008-08-12', 70000.00, 5, 4),
+('2020-08-11', 70030.00, 5, 15);
 
 
 

@@ -382,7 +382,7 @@ where dp.idProducto is null;
 /*
 10. Devuelve las oficinas donde no trabajan ninguno de los empleados que
 hayan sido los representantes de ventas de algún cliente que haya realizado
-la compra de algún producto de la gama Frutales.
+la compra de algún producto de la gama Frutas.
 */
 
 select * from oficina where id not in(
@@ -406,12 +406,169 @@ join cliente as cl2 on cl.id = cl2.id
 left join pago as pg on pg.idCliente = cl2.id 
 left join pedido as pd on pd.idCliente = cl.id where pg.total is null; 
 
+/*
+12. Devuelve un listado con los datos de los empleados que no tienen clientes
+asociados y el nombre de su jefe asociado.
+*/
+select em.nombre as empleado,concat(em.apellido1," ",em.apellido2)as apellidos,em2.nombre as jefe
+from empleado as em 
+left join cliente as cl on cl.idEmpleado = em.id
+left join empleado as em2 on em2.id = em.idJefe
+where cl.id is null;
+
+/*
+Consultas resumen
+*/
+
+/*
+1. ¿Cuántos empleados hay en la compañía?
+*/
+
+select count(em.id)from empleado em;
+
+/*
+2. ¿Cuántos clientes tiene cada país?
+*/
+
+select count(cd.idCliente) as clientes,pv.pais 
+from cliente_direccion as cd
+join paisvista as pv on cd.idCiudad = pv.idCiudad
+group by pv.pais;
+
+/*
+3. ¿Cuál fue el pago medio en 2008?
+*/
+
+select avg(total) from pago
+where year(fecha);
+
+/*
+4. ¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma
+descendente por el número de pedidos.
+*/
+
+select idEstado ,count(id) as pedidos from pedido
+group by idEstado ;
+
+/*
+5. Calcula el precio de venta del producto más caro y más barato en una
+misma consulta.
+*/
+
+select max(precioVenta)as maximo,
+min(precioVenta)as minimo from producto;
+
+/*
+6. Calcula el número de clientes que tiene la empresa.
+*/
+
+select count(*) as cantClientes from cliente;
+
+
+/*
+7. ¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
+*/
+
+select count(*) cantidadClientes from cliente_direccion as cd
+join ciudad as c on c.id = cd.idCiudad
+where c.nombre = "madrid";
+
+/*
+8. ¿Calcula cuántos clientes tiene cada una de las ciudades que empiezan
+por M?
+*/
+
+select  count(*) clientesEnM from cliente_direccion as cd
+join ciudad as c on c.id = cd.idCiudad
+where c.nombre like "m%";
+
+
+/*
+9. Devuelve el nombre de los representantes de ventas y el número de clientes
+al que atiende cada uno.
+*/
+
+select em.nombre as vendedor,count(cl.id) as cantClientes from empleado as em
+join cargo as cg on cg.id = em.idCargo
+join cliente as cl on cl.idEmpleado = em.id
+where cg.nombre = "vendedor"
+group by em.nombre;
+
+/*
+10. Calcula el número de clientes que no tiene asignado representante de
+ventas.
+*/
+
+select count(*) sinVendedores from empleado as em
+left join cliente as cl on cl.idEmpleado = em.id
+left join cargo as cg on cg.id = em.idCargo
+where cl.id is not null and cg.nombre != "vendedor";
 
 
 
-select * from paisvista;
+/*
+11. Calcula la fecha del primer y último pago realizado por cada uno de los
+clientes. El listado deberá mostrar el nombre y los apellidos de cada cliente.
+*/
+
+select cl.nombre,min(p.fecha) as primera, max(p.fecha)as ultima 
+from pago as p
+join cliente as cl on p.idCliente = cl.id
+join cliente as cl2 on cl.id = cl2.id
+group by cl.nombre;
+
+/*
+12. Calcula el número de productos diferentes que hay en cada uno de los
+pedidos.
+*/
+
+select idPedido as idPedido,count(idProducto) as cantidad 
+from detalle_pedido
+group by idPedido;
+
+/*
+13. Calcula la suma de la cantidad total de todos los productos que aparecen en
+cada uno de los pedidos.
+*/
+
+select dp.idPedido as idPedido,sum(dp.cantidad) as cantidad 
+from detalle_pedido as dp
+join pedido as p on dp.idPedido = p.id
+group by dp.idPedido
+;
+/*
+14. Devuelve un listado de los 5 productos más vendidos y el número total de
+unidades que se han vendido de cada uno. El listado deberá estar ordenado
+por el número total de unidades vendidas.
+*/
+
+select idProducto,p.nombre,cantidad from detalle_pedido as dp
+join producto as p on p.id = dp.idProducto
+order by cantidad desc limit 5;
+
+/*
+15. La facturación que ha tenido la empresa en toda la historia, indicando la
+base imponible, el IVA y el total facturado. La base imponible se calcula
+sumando el coste del producto por el número de unidades vendidas de la
+tabla detalle_pedido. El IVA es el 21 % de la base imponible, y el total la
+suma de los dos campos anteriores.
+*/
+
+select (dp.cantidad * sum(p.precioProveedor)) as imponible,
+(dp.cantidad * sum(p.precioProveedor) * 1.21 - dp.cantidad * sum(p.precioProveedor)) as iva,
+(dp.cantidad * sum(p.precioProveedor) * 1.21 - dp.cantidad * sum(p.precioProveedor)+ dp.cantidad * sum(p.precioProveedor)) as total
+ from detalle_pedido as dp
+join producto as p on dp.idProducto = p.id
+group by dp.cantidad;
 
 
-select * from oficina_direccion;
+/*
+16. La misma información que en la pregunta anterior, pero agrupada por
+código de producto.
+*/
 
-select * from pago;
+
+
+
+select sum(dp.cantidad) from detalle_pedido as dp
+join producto as p on dp.idProducto = p.id
